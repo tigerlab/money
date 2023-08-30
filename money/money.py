@@ -5,7 +5,7 @@ Money classes
 
 import decimal
 import re
-from packaging.version import StrictVersion
+import packaging.version as StrictVersion
 
 # RADAR: Python2
 import money.six
@@ -26,7 +26,7 @@ try:
     import babel.numbers
 
     BABEL_AVAILABLE = True
-    BABEL_VERSION = StrictVersion(babel.__version__)
+    BABEL_VERSION = StrictVersion.parse(babel.__version__)
     LC_NUMERIC = babel.default_locale("LC_NUMERIC")
 except ImportError:
     pass
