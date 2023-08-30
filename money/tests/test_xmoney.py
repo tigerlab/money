@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 XMoney class unittests
 """

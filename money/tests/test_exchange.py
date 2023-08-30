@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Money exchange unittests
 """
 # RADAR: Python2
-from __future__ import absolute_import
 
 from decimal import Decimal
 import unittest
@@ -121,7 +119,7 @@ class TestSimpleBackend(unittest.TestCase):
             xrates.setrate('AAA', Decimal('2'))
 
 
-class ConversionMixin(object):
+class ConversionMixin:
     def test_unavailable_backend_conversion_error(self):
         xrates.uninstall()
         with self.assertRaises(ExchangeBackendNotInstalled):

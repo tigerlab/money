@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Money unittests as mixins for Money and subclasses
 """
 # RADAR: Python2
-from __future__ import absolute_import
 
 import abc
 from decimal import Decimal
@@ -20,7 +18,7 @@ from money.exceptions import InvalidOperandType
 from money.exceptions import CurrencyMismatch
 
 
-class InstantiationMixin(object):
+class InstantiationMixin:
     def test_new_instance_int_amount(self):
         self.assertEqual(self.MoneyClass(0, 'XXX').amount, Decimal('0.00'))
         self.assertEqual(self.MoneyClass(2, 'XXX').amount, Decimal('2.00'))
@@ -70,7 +68,7 @@ class InstantiationMixin(object):
             self.MoneyClass('twenty', 'XXX')
 
 
-class ClassMixin(object):
+class ClassMixin:
     def test_is_money(self):
         self.assertIsInstance(self.money, Money)
     
@@ -81,10 +79,10 @@ class ClassMixin(object):
             self.money.currency = 'YYY'
     
     def test_hashable(self):
-        self.assertIsInstance(self.money, collections.Hashable)
+        self.assertIsInstance(self.money, collections.abc.Hashable)
     
     def test_hash_eq(self):
-        money_set = set([self.money, self.money])
+        money_set = {self.money, self.money}
         self.assertEqual(len(money_set), 1)
     
     def test_hash_int(self):
@@ -97,7 +95,7 @@ class ClassMixin(object):
         self.assertEqual((self.money.amount, self.money.currency), self.money.__composite_values__())
 
 
-class RepresentationsMixin(object):
+class RepresentationsMixin:
     def test_repr(self):
         self.assertEqual(repr(self.money), 'XXX 1234.567')
     
@@ -106,27 +104,27 @@ class RepresentationsMixin(object):
 
 
 # RADAR: Python2 (unicode strings u'')
-class FormattingMixin(object):
+class FormattingMixin:
     def test_custom_format_padding(self):
-        self.assertEqual(self.money.format('en_US', u'¤000000.00'), u'-$001234.57')
+        self.assertEqual(self.money.format('en_US', '¤000000.00'), '-$001234.57')
     
     def test_custom_format_custom_negative(self):
-        self.assertEqual(self.money.format('en_US', u'¤#,##0.00;<¤#,##0.00>'), u'<$1,234.57>')
+        self.assertEqual(self.money.format('en_US', '¤#,##0.00;<¤#,##0.00>'), '<$1,234.57>')
     
     def test_custom_format_grouping(self):
-        self.assertEqual(self.money.format('en_US', u'¤#,##0.00'), u'-$1,234.57')
-        self.assertEqual(self.money.format('de_DE', u'#,##0.00 ¤'), u'-1.234,57 $')
-        self.assertEqual(self.money.format('en_US', u'¤0.00'), u'-$1234.57')
-        self.assertEqual(self.money.format('de_DE', u'0.00 ¤'), u'-1234,57 $')
+        self.assertEqual(self.money.format('en_US', '¤#,##0.00'), '-$1,234.57')
+        self.assertEqual(self.money.format('de_DE', '#,##0.00 ¤'), '-1.234,57 $')
+        self.assertEqual(self.money.format('en_US', '¤0.00'), '-$1234.57')
+        self.assertEqual(self.money.format('de_DE', '0.00 ¤'), '-1234,57 $')
     
     def test_custom_format_decimals(self):
-        self.assertEqual(self.money.format('en_US', u'¤0.000', currency_digits=False), u'-$1234.567')
-        self.assertEqual(self.money.format('en_US', u'¤0', currency_digits=False), u'-$1235')
+        self.assertEqual(self.money.format('en_US', '¤0.000', currency_digits=False), '-$1234.567')
+        self.assertEqual(self.money.format('en_US', '¤0', currency_digits=False), '-$1235')
     
     def test_auto_format_locales(self):
-        self.assertEqual(self.money.format('en_US'), u'-$1,234.57')
-        self.assertEqual(self.money.format('de_DE'), u'-1.234,57\xa0$')
-        self.assertEqual(self.money.format('es_CO'), u'-US$\xa01.234,57')
+        self.assertEqual(self.money.format('en_US'), '-$1,234.57')
+        self.assertEqual(self.money.format('de_DE'), '-1.234,57\xa0$')
+        self.assertEqual(self.money.format('es_CO'), '-US$\xa01.234,57')
     
     def test_auto_format_locales_alias(self):
         self.assertEqual(self.money.format('en'), self.money.format('en_US'))
@@ -142,7 +140,7 @@ class FormattingMixin(object):
         self.assertEqual(self.money.format(), babel_formatted)
 
 
-class ParserMixin(object):
+class ParserMixin:
     def test_loads_repr(self):
         self.assertEqual(self.MoneyClass.loads('XXX 2.99'), self.MoneyClass('2.99', 'XXX'))
     
@@ -159,7 +157,7 @@ class ParserMixin(object):
             self.MoneyClass.loads('')
 
 
-class NumericOperationsMixin(object):
+class NumericOperationsMixin:
     def test_lt(self):
         self.assertTrue(self.MoneyClass('2.219', 'XXX') < self.MoneyClass('2.99', 'XXX'))
         self.assertTrue(self.MoneyClass('-2.99', 'XXX') < self.MoneyClass('2.99', 'XXX'))
@@ -437,7 +435,7 @@ class NumericOperationsMixin(object):
         self.assertEqual(round(self.MoneyClass('1.234', 'XXX'), 2), self.MoneyClass('1.23', 'XXX'))
 
 
-class UnaryOperationsReturnNewMixin(object):
+class UnaryOperationsReturnNewMixin:
     def test_pos(self):
         self.assertIsNot(+self.money, self.money)
     
@@ -448,7 +446,7 @@ class UnaryOperationsReturnNewMixin(object):
         self.assertIsNot(round(self.money), self.money)
 
 
-class LeftmostTypePrevailsMixin(object):
+class LeftmostTypePrevailsMixin:
     def test_add(self):
         result = self.money + self.other_money
         self.assertEqual(result.__class__, self.MoneyClass)

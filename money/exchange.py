@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Money exchange related classes and ``xrates`` API entry point.
 """
 # RADAR: Python2
-from __future__ import absolute_import
 
 import abc
 import decimal
@@ -17,7 +15,7 @@ from .exceptions import ExchangeBackendNotInstalled
 
 # RADAR: Python2
 @money.six.add_metaclass(abc.ABCMeta)
-class BackendBase(object):
+class BackendBase:
     """Abstract base class API for exchange backends"""
     @property
     @abc.abstractmethod
@@ -64,10 +62,10 @@ class SimpleBackend(BackendBase):
         return self._rates.get(currency, None)
 
     def quotation(self, origin, target):
-        return super(SimpleBackend, self).quotation(origin, target)
+        return super().quotation(origin, target)
 
 
-class ExchangeRates(object):
+class ExchangeRates:
     def __init__(self):
         self._backend = None
     
